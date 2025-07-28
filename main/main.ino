@@ -81,7 +81,7 @@ start("press start to begin test"); //start test
     count++;
   }
   stop();
-  
+//test
   Serial.println();
   Serial.println();
   Serial.print("test complete");
