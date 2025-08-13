@@ -22,8 +22,9 @@ const int L_PWM = 6;
 const int limit1 = A0;
 const int limit2 = A1;
 
-//button
+//buttons
 const int button = A2;
+const int stopButton = 1;
 
 // logic constants
 const bool pressed = LOW;
@@ -45,7 +46,12 @@ void forward(int speed);
 void backward(int speed);
 void stop();
 void checkPause();
+void linearTest();
+void radialTest();
 
+-------------------------------
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+-------------------------------
 void setup() 
 {
 Serial.begin(9600); // Don't forget this bruh
@@ -69,36 +75,7 @@ start("press start to calibrate"); //press to calibrate
 calibrate(); //calibrate
 start("press start to begin test"); //start test
 
-  for(int i=0; i < testCycles + 1; i++)
-  {
-    Serial.println();
-    Serial.print("test cycles: ");
-    Serial.print(count);
-    Serial.print("/");
-    Serial.print(testCycles);
-
-    while(digitalRead(limit2) == released)
-    {
-      checkPause();
-      forward(testSpeed);
-    }
-
-    while(digitalRead(limit1) == released)
-    {
-      checkPause();
-      backward(testSpeed);
-    }
-
-    count++;
-  }
-  stop();
-  
-  Serial.println();
-  Serial.println();
-  Serial.print("test complete");
-  Serial.println();
-  Serial.print("total cycles: ");
-  Serial.print(count - 1);
+linearTest();
 }
 
 void loop() 
@@ -150,6 +127,20 @@ void stop()
   analogWrite(L_PWM, 0);
 }
 
+void checkPause()
+{
+  if(stopButton == pressed)
+  {
+    while(button != pressed)
+    {
+    digitalWrite(LED_BUILTIN, HIGH);
+    delay(100);
+    digitalWrite(LED_BUILTIN, LOW);
+    delay(100);
+    }
+  }
+}
+/*
 void checkPause() {
   static bool lastButtonState = released;
   static unsigned long lastDebounceTime = 0;
@@ -194,6 +185,8 @@ void checkPause() {
     lastButtonState = currentButtonState;
   }
 }
+
+*/
 /*
 void checkPause()
 {
@@ -235,3 +228,43 @@ void checkPause()
   }
 }
 */
+
+void linearTest()
+{
+  for(int i=0; i < testCycles + 1; i++)
+    {
+      Serial.println();
+      Serial.print("test cycles: ");
+      Serial.print(count);
+      Serial.print("/");
+      Serial.print(testCycles);
+
+      while(digitalRead(limit2) != pressed)
+      {
+        checkPause();
+        forward(testSpeed);
+      }
+
+      while(digitalRead(limit1) != pressed)
+      {
+        checkPause();
+        backward(testSpeed);
+
+        lcd.clear();
+        lcd.setCursor(0,0);
+        lcd.print("cycles:")
+        lcd.setCursor(8,0);
+        lcd.print(i);
+      }
+
+      count++;
+    }
+    stop();
+    
+    Serial.println();
+    Serial.println();
+    Serial.print("test complete");
+    Serial.println();
+    Serial.print("total cycles: ");
+    Serial.print(count - 1);
+}
