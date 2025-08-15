@@ -69,6 +69,8 @@ pinMode(limit1, INPUT_PULLUP);
 pinMode(limit2, INPUT_PULLUP);
 pinMode(button, INPUT_PULLUP);
 
+pinMode(stopButton)
+
 pinMode(LED_BUILTIN, OUTPUT);
 
 start("press start to calibrate"); //press to calibrate
@@ -130,6 +132,7 @@ void stop()
 void checkPause()
 {
   if(stopButton == pressed)
+  
   {
     while(button != pressed)
     {
