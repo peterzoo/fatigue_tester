@@ -1,11 +1,11 @@
 //------------------------------------------
 // These parameters can be changed prior to 
-// uploading code for testing
+// uploading code for testing mats
 // -----------------------------------------
 int testSpeed = 255; // enter value between 0 and 255
 int testCycles = 3; // enter total cycles for testing
 // ------------------------------------------
-// MAT TESTER MAIN CODE, 50% duty cycle
+// MAT TESTER DEMO/LOW LOAD CODE, 100% duty cycle
 // ------------------------------------------
 
 // include & libraries
@@ -186,26 +186,18 @@ void test()
         lcd.setCursor(6,1);
         lcd.print(testCycles*cumulativeCycles);
 
-        startTime = millis(); // timer for duty cycle
         while(digitalRead(limit2) != pressed)
         {
           checkPause();
           forward(testSpeed);
         }
-        stop();
-        duration = millis() - startTime;        // how long it ran
-        delay(duration);                   // pause based on duty amount
 
-        startTime = millis();
         while(digitalRead(limit1) != pressed)
         {
           checkPause();
           backward(testSpeed);
         }
         count++;
-        stop();
-        duration = millis() - startTime;        // how long it ran
-        delay(duration);                        // pause based on duty amount
       }
       stop();
       finished = true;
